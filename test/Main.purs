@@ -22,7 +22,7 @@ import Foreign.JSON (parseJSON)
 import Foreign.Object as Object
 import Global.Unsafe (unsafeStringify)
 import Test.Assert (assert, assert')
-import Test.Types (Fruit(..), IntList(..), RecordTest(..), Tree(..), TupleArray(..), UndefinedTest(..), SumWithRecord(..))
+import Test.Types (Fruit(..), IntList(..), RecordTest(..), Tree(..), TupleArray(..), UndefinedTest(..), SumWithRecord(..), NestedSum(..), unwrapRecordsEncoding)
 
 buildTree :: forall a. (a -> TupleArray a a) -> Int -> a -> Tree a
 buildTree _ 0 a = Leaf a
@@ -146,3 +146,6 @@ main = do
   testGenericRoundTrip opts (RecordTest { foo: 1, bar: "test", baz: 'a' })
   testNothingToNull
   testNothingFromMissing
+  let sopts = defaultOptions { unwrapSingleConstructors = true, sumEncoding = unwrapRecordsEncoding }
+  testGenericRoundTrip sopts (NestedSumArg Sum2)
+

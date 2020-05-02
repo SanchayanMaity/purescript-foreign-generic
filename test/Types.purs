@@ -57,9 +57,27 @@ instance decodeRecordTest :: Decode RecordTest where
 instance encodeRecordTest :: Encode RecordTest where
   encode x = genericEncode (defaultOptions { unwrapSingleConstructors = true }) x
 
+data NestedSum = Sum1 | Sum2
+
+derive instance genericNestedSum :: Generic NestedSum _
+
+instance showNestedSum :: Show NestedSum where
+  show x = genericShow x
+
+instance eqNestedSum :: Eq NestedSum where
+  eq x y = genericEq x y
+
+instance decodeNestedSum :: Decode NestedSum where
+  decode x = genericDecode (defaultOptions { unwrapSingleConstructors = true, sumEncoding = unwrapRecordsEncoding }) x
+
+instance encodeNestedSum :: Encode NestedSum where
+  encode x = genericEncode (defaultOptions { unwrapSingleConstructors = true, sumEncoding = unwrapRecordsEncoding }) x
+
+
 -- | A sum type with record args
 data SumWithRecord
   = NoArgs
+  | NestedSumArg NestedSum
   | SomeArg String
   | ManyArgs String String
   | RecordArgs
